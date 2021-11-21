@@ -4,10 +4,9 @@ import com.task.footbalteam.model.Team;
 import com.task.footbalteam.service.impl.PlayersServiceImpl;
 import com.task.footbalteam.service.impl.TeamServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/team")
@@ -22,8 +21,8 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-    @GetMapping("/")
-    public ResponseEntity<Team> getTeam(){
-        return teamService.findTeam(2L);
+    @GetMapping(value = "/v1/")
+    public ResponseEntity<Team> getTeam(@RequestParam("id") Long id){
+        return teamService.findTeam(id);
     }
 }
