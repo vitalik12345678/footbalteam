@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +33,19 @@ public class TeamServiceImpl implements TeamService {
         this.playersRepository = playersRepository;
         this.teamRepository = teamRepository;
         this.dtoConverter = dtoConverter;
+    }
+
+    /**
+     * Use this endpoin for get all team
+     *
+     *
+     * @return status 200(team list)
+     */
+
+    @Override
+    public ResponseEntity<List<Team>> getAllTeam() {
+        List<Team> teamList = teamRepository.findAll();
+        return ResponseEntity.ok(teamList);
     }
 
     /**
@@ -68,11 +82,10 @@ public class TeamServiceImpl implements TeamService {
             throw new ExistException("The team is incorrectly name " + teamCreateProfile.getName());
         }
        else{
-        Team team1 = dtoConverter.convertToEntity(teamCreateProfile,new Team());
-        teamRepository.save(team1);
+        Team team = dtoConverter.convertToEntity(teamCreateProfile,new Team());
+        teamRepository.save(team);
         log.info("Created successful");
         return ResponseEntity.ok("Created successful");
-        //return ResponseEntity.created(URI.create("/team/"+teamCreateProfile.getName())).build();
        }
     }
 
@@ -100,7 +113,7 @@ public class TeamServiceImpl implements TeamService {
      *
      * @param id team id
      * @param teamUpdateProfile object of DTO class {@link TeamUpdateProfile}
-     * @return
+     * @return status 200 or throw {@link NotExistException}
      */
 
     @Override

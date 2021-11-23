@@ -5,7 +5,11 @@ import com.task.footbalteam.DTO.team.TeamUpdateProfile;
 import com.task.footbalteam.model.Team;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface TeamService {
+
+    ResponseEntity<List<Team>> getAllTeam();
 
     ResponseEntity<Team> findTeam(Long id);
 
