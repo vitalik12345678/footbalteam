@@ -1,14 +1,12 @@
 package com.task.footbalteam.DTO.team;
 
+import com.task.footbalteam.DTO.Convetible;
 import lombok.Data;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @Data
-public class TeamCreateProfile {
+public class TeamCreateProfile implements Convetible {
 
     @NotBlank
     @Pattern(regexp = "^[A-Za-z]*$",message = "Use only english letters")
@@ -22,10 +20,10 @@ public class TeamCreateProfile {
     @Pattern(regexp = "^[A-Za-z]*$",message = "Use only english letters")
     private String country;
 
-    @NotEmpty
+    @NotNull
     private Integer score;
 
-    @NotEmpty
+    @NotNull
     private Float fine;
 
 }

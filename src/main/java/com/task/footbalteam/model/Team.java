@@ -1,6 +1,7 @@
 package com.task.footbalteam.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.task.footbalteam.DTO.Convetible;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "team")
 @Data
-public class Team {
+public class Team implements Convetible {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package com.task.footbalteam.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.task.footbalteam.DTO.Convetible;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "players")
 @Data
-public class Players {
+public class Players implements Convetible {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
