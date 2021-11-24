@@ -20,6 +20,6 @@ public interface TeamService {
 
     ResponseEntity<Team> updateTeam(Long id, TeamUpdateProfile teamUpdateProfile);
 
-    ResponseEntity<Team> transfer(TransferProfile transferProfile);
+    ResponseEntity<?> transfer(TransferProfile transferProfile);
 
 }

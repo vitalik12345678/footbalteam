@@ -1,9 +1,6 @@
 package com.task.footbalteam.exception.handler;
 
-import com.task.footbalteam.exception.BadRequestException;
-import com.task.footbalteam.exception.ErrorDetails;
-import com.task.footbalteam.exception.ExistException;
-import com.task.footbalteam.exception.NotExistException;
+import com.task.footbalteam.exception.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +31,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
         return buildExceptionBody(exception,HttpStatus.BAD_REQUEST);
     }*/
+
+    @ExceptionHandler(InvalidArgumentException.class)
+    public final ResponseEntity<Object> handleInvalidArgumantException(InvalidArgumentException exception){
+        return buildExceptionBody(exception,HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(NumberFormatException.class)
     public final ResponseEntity<Object> handleNumberFormatException(NumberFormatException exception){

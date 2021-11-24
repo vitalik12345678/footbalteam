@@ -27,6 +27,9 @@ public class Players implements Convetible {
     @Column(name = "carier_start")
     private LocalDate careerStart;
 
+    @Column(name = "birthday")
+    private LocalDate birthday;
+
     @ManyToOne()
     @JoinColumn(name = "team_id")
     @JsonBackReference

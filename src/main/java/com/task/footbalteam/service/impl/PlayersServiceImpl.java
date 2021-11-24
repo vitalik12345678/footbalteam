@@ -126,10 +126,11 @@ public class PlayersServiceImpl implements PlayersService {
             throw new ExistException("Player exist");
         } else {
             Players players = new Players();
-            players.setFirstName(playerCreateProfile.getFirstName());
-            players.setCareerStart(playerCreateProfile.getCareerStart());
-            players.setLastName(playerCreateProfile.getLastName());
             players.setTeam(optionalTeam.get());
+            players.setLastName(playerCreateProfile.getLastName());
+            players.setCareerStart(playerCreateProfile.getCareerStart());
+            players.setBirthday(playerCreateProfile.getBirthday());
+            players.setFirstName(playerCreateProfile.getFirstName());
             playersRepository.save(players);
             return ResponseEntity.ok(players);
         }

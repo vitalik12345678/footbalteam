@@ -22,6 +22,9 @@ public class PlayerCreateProfile {
     private LocalDate careerStart;
 
     @NotNull
+    private LocalDate birthday;
+
+    @NotNull
     private Long teamId;
 
 }

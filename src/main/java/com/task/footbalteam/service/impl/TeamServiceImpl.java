@@ -5,6 +5,7 @@ import com.task.footbalteam.DTO.team.TeamCreateProfile;
 import com.task.footbalteam.DTO.team.TeamUpdateProfile;
 import com.task.footbalteam.DTO.transfer.TransferProfile;
 import com.task.footbalteam.exception.ExistException;
+import com.task.footbalteam.exception.InvalidArgumentException;
 import com.task.footbalteam.exception.NotExistException;
 import com.task.footbalteam.model.Players;
 import com.task.footbalteam.model.Team;
@@ -136,7 +137,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public ResponseEntity<Team> transfer(TransferProfile transferProfile) {
+    public ResponseEntity<?> transfer(TransferProfile transferProfile) {
         Optional<Team> optionalOldTeam = teamRepository.findById(Long.valueOf(transferProfile.getOldTeamId()));
         Optional<Team> optionalNewTeam = teamRepository.findById(Long.valueOf(transferProfile.getNewTeamId()));
         Optional<Players> optionalPlayer = playersRepository.findById(Long.valueOf(transferProfile.getPlayerId()));
@@ -144,28 +145,44 @@ public class TeamServiceImpl implements TeamService {
         if (optionalPlayer.isEmpty()){
             log.error(transferProfile.getPlayerId() + " player not exist");
             throw new NotExistException("Player not exist");
-        }else if (optionalNewTeam.isEmpty() || optionalOldTeam.isEmpty()){
+        }else if (optionalPlayer.get().getId().equals(optionalOldTeam.get().getId())){
+            throw new RuntimeException("");
+        }
+        else if (optionalNewTeam.isEmpty() || optionalOldTeam.isEmpty() ){
             log.error("Incorrect team ");
             throw new NotExistException("Team/s not exist");
-        }else {
+        }else if (optionalOldTeam.get().getId().equals(optionalNewTeam.get().getId())){
+            log.error("Team have equal id");
+            throw new InvalidArgumentException();
+        }
+        else {
             Players players = optionalPlayer.get();
             Team oldTeam = optionalOldTeam.get();
             Team newTeam = optionalNewTeam.get();
 
+            newTeam.getPlayers().stream().forEach((x) ->{
+                if (x.equals(players)){
+                    throw new RuntimeException("");
+                }
+            });
             LocalDate localDate = LocalDate.now();
 
+            long playerAge = Math.abs(ChronoUnit.YEARS.between(localDate,players.getCareerStart()));
             long mouth = ChronoUnit.MONTHS.between(players.getCareerStart(),localDate);
+            int price = (int) ((100000 * Math.abs(mouth))/playerAge);
+            price += price*oldTeam.getScore();
 
-            if (mouth <= 0){
-                throw new RuntimeException("Mount < 0");
+            if (newTeam.getScore() <= price){
+             return new ResponseEntity<>("The new team does not have enough money",HttpStatus.FORBIDDEN);
+            }else {
+                players.setTeam(newTeam);
+                oldTeam.setScore(oldTeam.getScore()+price);
+                newTeam.setScore(newTeam.getScore()-price);
+                playersRepository.save(players);
+                teamRepository.save(oldTeam);
+                teamRepository.save(newTeam);
+                return ResponseEntity.ok(players);
             }
-
-            long salasry = (100000 * Math.abs(mouth))/20;
-
-            System.out.println(salasry);
-
-           // LocalDate experience = ( LocalDate.now(). players.getCareerStart() )
-            return null;
         }
     }
 }

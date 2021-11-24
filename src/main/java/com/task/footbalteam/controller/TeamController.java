@@ -60,7 +60,7 @@ public class TeamController {
     }
 
     @PutMapping(value = "/v1/transfer")
-    public ResponseEntity<Team> playerTransfer(@Valid
+    public ResponseEntity<?> playerTransfer(@Valid
                                  @RequestBody TransferProfile transferProfile){
         return teamService.transfer(transferProfile);
     }
