@@ -2,6 +2,7 @@ package com.task.footbalteam.controller;
 
 import com.task.footbalteam.DTO.team.TeamCreateProfile;
 import com.task.footbalteam.DTO.team.TeamUpdateProfile;
+import com.task.footbalteam.DTO.transfer.TransferProfile;
 import com.task.footbalteam.model.Team;
 import com.task.footbalteam.service.PlayersService;
 import com.task.footbalteam.service.TeamService;
@@ -39,14 +40,14 @@ public class TeamController {
     }
 
     @PostMapping(value = "/v1/")
-    public ResponseEntity<String> createTeam(
+    public ResponseEntity<Team> createTeam(
             @Valid
             @RequestBody TeamCreateProfile teamCreateProfile){
         return teamService.createTeam(teamCreateProfile);
     }
 
     @PutMapping(value = "/v1/{id}")
-    public ResponseEntity<String> updateTeam(
+    public ResponseEntity<Team> updateTeam(
             @PathVariable("id") Long id,
             @Valid
             @RequestBody TeamUpdateProfile teamUpdateProfile){
@@ -56,5 +57,11 @@ public class TeamController {
     @DeleteMapping("/v1/{id}")
     public ResponseEntity<?> deleteTeam(@PathVariable("id") Long id){
         return teamService.deleteTeam(id);
+    }
+
+    @PutMapping(value = "/v1/transfer")
+    public ResponseEntity<Team> playerTransfer(@Valid
+                                 @RequestBody TransferProfile transferProfile){
+        return teamService.transfer(transferProfile);
     }
 }

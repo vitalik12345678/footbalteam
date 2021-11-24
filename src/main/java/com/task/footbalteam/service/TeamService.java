@@ -2,6 +2,7 @@ package com.task.footbalteam.service;
 
 import com.task.footbalteam.DTO.team.TeamCreateProfile;
 import com.task.footbalteam.DTO.team.TeamUpdateProfile;
+import com.task.footbalteam.DTO.transfer.TransferProfile;
 import com.task.footbalteam.model.Team;
 import org.springframework.http.ResponseEntity;
 
@@ -13,10 +14,12 @@ public interface TeamService {
 
     ResponseEntity<Team> findTeam(Long id);
 
-    ResponseEntity<String> createTeam(TeamCreateProfile teamCreateProfile);
+    ResponseEntity<Team> createTeam(TeamCreateProfile teamCreateProfile);
 
     ResponseEntity<?> deleteTeam(Long id);
 
-    ResponseEntity<String> updateTeam(Long id, TeamUpdateProfile teamUpdateProfile);
+    ResponseEntity<Team> updateTeam(Long id, TeamUpdateProfile teamUpdateProfile);
+
+    ResponseEntity<Team> transfer(TransferProfile transferProfile);
 
 }

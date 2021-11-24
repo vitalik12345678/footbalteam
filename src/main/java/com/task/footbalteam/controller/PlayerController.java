@@ -40,12 +40,12 @@ public class PlayerController {
     }
 
     @PostMapping(value = "/v1/")
-    public ResponseEntity<String> createPlayer(@Valid @RequestBody PlayerCreateProfile playerCreateProfile){
+    public ResponseEntity<Players> createPlayer(@Valid @RequestBody PlayerCreateProfile playerCreateProfile){
         return playersService.createPlayer(playerCreateProfile);
     }
 
     @PutMapping(value = "/v1/{id}")
-    public ResponseEntity<String > updatePlayer(@PathVariable("id") Long id,
+    public ResponseEntity<Players> updatePlayer(@PathVariable("id") Long id,
                                                 @Valid
                                                 @RequestBody
                                                 PlayerUpdateProfile playerUpdateProfile){

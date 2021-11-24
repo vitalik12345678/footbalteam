@@ -3,8 +3,10 @@ package com.task.footbalteam.service.impl;
 import com.task.footbalteam.DTO.DtoConverter;
 import com.task.footbalteam.DTO.team.TeamCreateProfile;
 import com.task.footbalteam.DTO.team.TeamUpdateProfile;
+import com.task.footbalteam.DTO.transfer.TransferProfile;
 import com.task.footbalteam.exception.ExistException;
 import com.task.footbalteam.exception.NotExistException;
+import com.task.footbalteam.model.Players;
 import com.task.footbalteam.model.Team;
 import com.task.footbalteam.repository.PlayersRepository;
 import com.task.footbalteam.repository.TeamRepository;
@@ -15,13 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
+@Transactional
 public class TeamServiceImpl implements TeamService {
 
     private final PlayersRepository playersRepository;
@@ -74,7 +79,7 @@ public class TeamServiceImpl implements TeamService {
      */
 
     @Override
-    public ResponseEntity<String> createTeam(TeamCreateProfile teamCreateProfile) {
+    public ResponseEntity<Team> createTeam(TeamCreateProfile teamCreateProfile) {
 
         Optional<Team> optionalTeam = teamRepository.findByName(teamCreateProfile.getName());
         if (optionalTeam.isPresent()){
@@ -85,7 +90,7 @@ public class TeamServiceImpl implements TeamService {
         Team team = dtoConverter.convertToEntity(teamCreateProfile,new Team());
         teamRepository.save(team);
         log.info("Created successful");
-        return ResponseEntity.ok("Created successful");
+        return ResponseEntity.ok(team);
        }
     }
 
@@ -117,15 +122,50 @@ public class TeamServiceImpl implements TeamService {
      */
 
     @Override
-    public ResponseEntity<String> updateTeam(Long id, TeamUpdateProfile teamUpdateProfile) {
+    public ResponseEntity<Team> updateTeam(Long id, TeamUpdateProfile teamUpdateProfile) {
         Optional<Team> optionalTeam = teamRepository.findById(id);
         if (optionalTeam.isPresent()){
             Team team = optionalTeam.get();
             BeanUtils.copyProperties(teamUpdateProfile,team);
             log.info("Team update id{}  "+team.getId());
-            return ResponseEntity.ok("Team update successful");
+            teamRepository.save(team);
+            return ResponseEntity.ok(team);
         }else {
             throw new NotExistException("Team not exist ");
+        }
+    }
+
+    @Override
+    public ResponseEntity<Team> transfer(TransferProfile transferProfile) {
+        Optional<Team> optionalOldTeam = teamRepository.findById(Long.valueOf(transferProfile.getOldTeamId()));
+        Optional<Team> optionalNewTeam = teamRepository.findById(Long.valueOf(transferProfile.getNewTeamId()));
+        Optional<Players> optionalPlayer = playersRepository.findById(Long.valueOf(transferProfile.getPlayerId()));
+
+        if (optionalPlayer.isEmpty()){
+            log.error(transferProfile.getPlayerId() + " player not exist");
+            throw new NotExistException("Player not exist");
+        }else if (optionalNewTeam.isEmpty() || optionalOldTeam.isEmpty()){
+            log.error("Incorrect team ");
+            throw new NotExistException("Team/s not exist");
+        }else {
+            Players players = optionalPlayer.get();
+            Team oldTeam = optionalOldTeam.get();
+            Team newTeam = optionalNewTeam.get();
+
+            LocalDate localDate = LocalDate.now();
+
+            long mouth = ChronoUnit.MONTHS.between(players.getCareerStart(),localDate);
+
+            if (mouth <= 0){
+                throw new RuntimeException("Mount < 0");
+            }
+
+            long salasry = (100000 * Math.abs(mouth))/20;
+
+            System.out.println(salasry);
+
+           // LocalDate experience = ( LocalDate.now(). players.getCareerStart() )
+            return null;
         }
     }
 }

@@ -30,6 +30,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return buildExceptionBody(exception,HttpStatus.NOT_FOUND);
     }
 
+  /*  @ExceptionHandler(MethodArgumentNotValidException.class)
+    public final ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        return buildExceptionBody(exception,HttpStatus.BAD_REQUEST);
+    }*/
+
+    @ExceptionHandler(NumberFormatException.class)
+    public final ResponseEntity<Object> handleNumberFormatException(NumberFormatException exception){
+        return buildExceptionBody(exception,HttpStatus.CONFLICT);
+    }
+
     private ResponseEntity<Object> buildExceptionBody(Exception exception, HttpStatus httpStatus) {
         ErrorDetails exceptionResponse = ErrorDetails.builder()
                 .status(httpStatus.value())

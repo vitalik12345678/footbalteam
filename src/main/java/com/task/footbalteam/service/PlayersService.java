@@ -3,7 +3,6 @@ package com.task.footbalteam.service;
 import com.task.footbalteam.DTO.players.PlayerCreateProfile;
 import com.task.footbalteam.DTO.players.PlayerUpdateProfile;
 import com.task.footbalteam.model.Players;
-import com.task.footbalteam.model.Team;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -16,8 +15,8 @@ public interface PlayersService {
 
     ResponseEntity<?> deletePlayer(Long id);
 
-    ResponseEntity<String> updatePlayer(Long id, PlayerUpdateProfile playerUpdateProfile);
+    ResponseEntity<Players> updatePlayer(Long id, PlayerUpdateProfile playerUpdateProfile);
 
-    ResponseEntity<String> createPlayer(PlayerCreateProfile playerCreateProfile);
+    ResponseEntity<Players> createPlayer(PlayerCreateProfile playerCreateProfile);
 
 }

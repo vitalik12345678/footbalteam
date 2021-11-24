@@ -15,12 +15,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
+@Transactional
 public class PlayersServiceImpl implements PlayersService {
 
     private final PlayersRepository playersRepository;
@@ -42,10 +44,11 @@ public class PlayersServiceImpl implements PlayersService {
     }
 
     /**
-     * Use this endpoint for find player
+     * The method returns the player, if it is exist
      *
      * @param id player's id
-     * @return
+     * @return Player's info
+     * @throws {@link NotExistException}
      */
     @Override
     public ResponseEntity<Players> findPlayer(Long id) {
@@ -58,34 +61,58 @@ public class PlayersServiceImpl implements PlayersService {
         }
     }
 
+    /**
+     * The method returns the http status 200 if deleted sucessful
+     *
+     * @param id player id
+     * @return deleted info about player
+     * @throws {@link NotExistException}
+     */
+
     @Override
-    public ResponseEntity<?> deletePlayer(Long id) {
+    public ResponseEntity<Players> deletePlayer(Long id) {
         Optional<Players> optionalPlayers = playersRepository.findById(id);
         if (optionalPlayers.isPresent()) {
             playersRepository.delete(optionalPlayers.get());
-            return ResponseEntity.ok("Player was deleted successful");
+            return ResponseEntity.ok(optionalPlayers.get());
         } else {
             log.error("Player wasnt found");
             throw new NotExistException("Player not exist");
         }
     }
 
+    /**
+     *
+     * @param id
+     * @param playerUpdateProfile object of class {@link PlayerUpdateProfile}
+     * @return updated player
+     * @throws {@link NotExistException}
+     */
+
     @Override
-    public ResponseEntity<String> updatePlayer(Long id, PlayerUpdateProfile playerUpdateProfile) {
+    public ResponseEntity<Players> updatePlayer(Long id, PlayerUpdateProfile playerUpdateProfile) {
         Optional<Players> optionalPlayers = playersRepository.findById(id);
         if (optionalPlayers.isPresent()) {
             Players players = optionalPlayers.get();
             BeanUtils.copyProperties(playerUpdateProfile, players);
             playersRepository.save(players);
-            return ResponseEntity.ok("Player was deleted successful");
+            return ResponseEntity.ok(players);
         } else {
             log.error("Player wasnt found");
             throw new NotExistException("Player not exist");
         }
     }
 
+    /**
+     * The method returns new player if he not exist and selected team exist
+     *
+     * @param playerCreateProfile object of class {@link PlayerCreateProfile}
+     * @return new player
+     * @throws {@link ExistException} player exist in db or {@link NotExistException} team not exist
+     */
+
     @Override
-    public ResponseEntity<String> createPlayer(PlayerCreateProfile playerCreateProfile) {
+    public ResponseEntity<Players> createPlayer(PlayerCreateProfile playerCreateProfile) {
         Optional<Players> optionalPlayers = playersRepository.findByCareerStartAndLastNameAndFirstName(playerCreateProfile.getCareerStart(), playerCreateProfile.getLastName(), playerCreateProfile.getFirstName());
         Optional<Team> optionalTeam = teamRepository.findById(playerCreateProfile.getTeamId());
 
@@ -104,7 +131,7 @@ public class PlayersServiceImpl implements PlayersService {
             players.setLastName(playerCreateProfile.getLastName());
             players.setTeam(optionalTeam.get());
             playersRepository.save(players);
-            return ResponseEntity.ok("Player created successful");
+            return ResponseEntity.ok(players);
         }
     }
 }
