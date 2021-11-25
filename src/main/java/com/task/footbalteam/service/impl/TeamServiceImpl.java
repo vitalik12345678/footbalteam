@@ -40,10 +40,10 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * Use this endpoin for get all team
+     * The method returns get team
      *
      *
-     * @return status 200(team list)
+     * @return {@link List<Team>}
      */
 
     @Override
@@ -53,10 +53,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * Use this endpoint for get team by id
+     * The method returns team by id
      *
      * @param id team id
-     * @return {@link Team} or throw {@link NotExistException}
+     * @return {@link Team}
+     * @throws {@link NotExistException}
      */
     @Override
     public ResponseEntity<Team> findTeam(Long id) {
@@ -71,10 +72,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * Use this endpoint for create team
+     * The method returns created team
      *
      * @param teamCreateProfile - dto {@link TeamCreateProfile}
-     * @return URI to created team or throw {@link ExistException}
+     * @return {@link Team}
+     * @throws {@link ExistException}
      */
 
     @Override
@@ -94,10 +96,10 @@ public class TeamServiceImpl implements TeamService {
     }
 
     /**
-     * Use this endpoint for delete team
+     * The method returns delete team
      *
      * @param id team id
-     * @return status 200 or throw {@link NotExistException}
+     * @throws {@link NotExistException}
      */
 
     @Override
@@ -118,6 +120,7 @@ public class TeamServiceImpl implements TeamService {
      * @param id team id
      * @param teamUpdateProfile object of DTO class {@link TeamUpdateProfile}
      * @return status 200 or throw {@link NotExistException}
+     * @throws NotExistException
      */
 
     @Override
@@ -138,8 +141,9 @@ public class TeamServiceImpl implements TeamService {
      * Use this method for transfer player from one team to another
      * Player's price = 10000 * EXPERIENCE_IN_MONTH /PLAYER_AGE
      *
-     * @param transferProfile
-     * @return
+     * @param transferProfile - object of DTO class {@link TransferProfile}
+     * @return transfer player
+     * @throws {@link NotExistException} or {@link ExistException}
      */
 
     @Override
