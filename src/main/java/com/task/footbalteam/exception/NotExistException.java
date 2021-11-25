@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-public class NotExistException extends IllegalArgumentException {
+public class NotExistException extends IllegalStateException {
     private static final long serialVersionUID = 1L;
     private static final String NOT_EXIST_EXCEPTION = "Not exist";
 

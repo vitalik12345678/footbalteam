@@ -27,10 +27,10 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return buildExceptionBody(exception,HttpStatus.NOT_FOUND);
     }
 
-  /*  @ExceptionHandler(MethodArgumentNotValidException.class)
-    public final ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
-        return buildExceptionBody(exception,HttpStatus.BAD_REQUEST);
-    }*/
+    @ExceptionHandler(NotCorrectDataException.class)
+    public final ResponseEntity<Object> handleNotCorrectDataException(NotCorrectDataException exception){
+        return buildExceptionBody(exception,HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(InvalidArgumentException.class)
     public final ResponseEntity<Object> handleInvalidArgumantException(InvalidArgumentException exception){
