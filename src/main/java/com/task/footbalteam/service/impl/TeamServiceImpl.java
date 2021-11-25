@@ -136,6 +136,14 @@ public class TeamServiceImpl implements TeamService {
         }
     }
 
+    /**
+     * Use this method for transfer player from one team to another
+     * Player's price = 10000 * EXPERIENCE_IN_MONTH /PLAYER_AGE
+     *
+     * @param transferProfile
+     * @return
+     */
+
     @Override
     public ResponseEntity<?> transfer(TransferProfile transferProfile) {
         Optional<Team> optionalOldTeam = teamRepository.findById(Long.valueOf(transferProfile.getOldTeamId()));

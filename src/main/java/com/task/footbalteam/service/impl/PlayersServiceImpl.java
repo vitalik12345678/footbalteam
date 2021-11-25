@@ -13,6 +13,7 @@ import com.task.footbalteam.service.PlayersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,7 +63,7 @@ public class PlayersServiceImpl implements PlayersService {
     }
 
     /**
-     * The method returns the http status 200 if deleted sucessful
+     * The method returns the http status 200 and remote player
      *
      * @param id player id
      * @return deleted info about player
@@ -82,6 +83,7 @@ public class PlayersServiceImpl implements PlayersService {
     }
 
     /**
+     *The method returns 200 http status and updated player
      *
      * @param id
      * @param playerUpdateProfile object of class {@link PlayerUpdateProfile}
@@ -96,7 +98,7 @@ public class PlayersServiceImpl implements PlayersService {
             Players players = optionalPlayers.get();
             BeanUtils.copyProperties(playerUpdateProfile, players);
             playersRepository.save(players);
-            return ResponseEntity.ok(players);
+            return new ResponseEntity<>(players,HttpStatus.OK);
         } else {
             log.error("Player wasnt found");
             throw new NotExistException("Player not exist");
@@ -132,7 +134,7 @@ public class PlayersServiceImpl implements PlayersService {
             players.setBirthday(playerCreateProfile.getBirthday());
             players.setFirstName(playerCreateProfile.getFirstName());
             playersRepository.save(players);
-            return ResponseEntity.ok(players);
+            return new ResponseEntity<>(players, HttpStatus.CREATED);
         }
     }
 }
