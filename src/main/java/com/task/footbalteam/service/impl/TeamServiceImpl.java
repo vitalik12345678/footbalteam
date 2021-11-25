@@ -4,9 +4,7 @@ import com.task.footbalteam.DTO.DtoConverter;
 import com.task.footbalteam.DTO.team.TeamCreateProfile;
 import com.task.footbalteam.DTO.team.TeamUpdateProfile;
 import com.task.footbalteam.DTO.transfer.TransferProfile;
-import com.task.footbalteam.exception.ExistException;
-import com.task.footbalteam.exception.InvalidArgumentException;
-import com.task.footbalteam.exception.NotExistException;
+import com.task.footbalteam.exception.*;
 import com.task.footbalteam.model.Players;
 import com.task.footbalteam.model.Team;
 import com.task.footbalteam.repository.PlayersRepository;
@@ -146,33 +144,33 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public ResponseEntity<?> transfer(TransferProfile transferProfile) {
-        Optional<Team> optionalOldTeam = teamRepository.findById(Long.valueOf(transferProfile.getOldTeamId()));
-        Optional<Team> optionalNewTeam = teamRepository.findById(Long.valueOf(transferProfile.getNewTeamId()));
-        Optional<Players> optionalPlayer = playersRepository.findById(Long.valueOf(transferProfile.getPlayerId()));
+        Optional<Team> optionalOldTeam = teamRepository.findById(transferProfile.getOldTeamId());
+        Optional<Team> optionalNewTeam = teamRepository.findById(transferProfile.getNewTeamId());
+        Optional<Players> optionalPlayer = playersRepository.findById(transferProfile.getPlayerId());
 
         if (optionalPlayer.isEmpty()){
             log.error(transferProfile.getPlayerId() + " player not exist");
             throw new NotExistException("Player not exist");
-        }else if (optionalPlayer.get().getId().equals(optionalOldTeam.get().getId())){
-            throw new RuntimeException("");
         }
         else if (optionalNewTeam.isEmpty() || optionalOldTeam.isEmpty() ){
             log.error("Incorrect team ");
             throw new NotExistException("Team/s not exist");
         }else if (optionalOldTeam.get().getId().equals(optionalNewTeam.get().getId())){
             log.error("Team have equal id");
-            throw new InvalidArgumentException();
+            throw new NotCorrectDataException("Team have equal id");
         }
         else {
             Players players = optionalPlayer.get();
             Team oldTeam = optionalOldTeam.get();
             Team newTeam = optionalNewTeam.get();
 
-            newTeam.getPlayers().stream().forEach((x) ->{
+            newTeam.getPlayers().stream().forEach(x ->{
                 if (x.equals(players)){
-                    throw new RuntimeException("");
+                    log.error(x.getId()+" player's id in team");
+                    throw new NotExistException("Player exist in new team");
                 }
             });
+
             LocalDate localDate = LocalDate.now();
 
             long playerAge = Math.abs(ChronoUnit.YEARS.between(localDate,players.getCareerStart()));

@@ -21,12 +21,10 @@ public class PlayerController {
 
 
     private final PlayersService playersService;
-    private final TeamService teamService;
 
     @Autowired
-    public PlayerController(PlayersService playersService, TeamService teamService) {
+    public PlayerController(PlayersService playersService) {
         this.playersService = playersService;
-        this.teamService = teamService;
     }
 
     @GetMapping(value = "/v1/allPlayers")

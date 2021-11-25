@@ -20,12 +20,11 @@ import java.util.List;
 @RequestMapping("/team")
 public class TeamController {
 
-    private final PlayersService playersService;
+
     private final TeamService teamService;
 
     @Autowired
-    public TeamController(PlayersService playersService, TeamService teamService) {
-        this.playersService = playersService;
+    public TeamController(TeamService teamService) {
         this.teamService = teamService;
     }
 
