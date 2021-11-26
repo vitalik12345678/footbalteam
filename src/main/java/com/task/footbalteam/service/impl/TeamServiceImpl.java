@@ -180,7 +180,9 @@ public class TeamServiceImpl implements TeamService {
             long playerAge = Math.abs(ChronoUnit.YEARS.between(localDate,players.getCareerStart()));
             long mouth = ChronoUnit.MONTHS.between(players.getCareerStart(),localDate);
             int price = (int) ((100000 * Math.abs(mouth))/playerAge);
-            price += price*oldTeam.getScore();
+            price += price*oldTeam.getFine();
+
+
 
             if (newTeam.getScore() <= price){
              return new ResponseEntity<>("The new team does not have enough money",HttpStatus.FORBIDDEN);
